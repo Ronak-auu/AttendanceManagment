@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail;
     private  EditText inputPassword;
     private TextView Info;
-    private Button Login,chirag;
+    private Button Login;
     private FirebaseAuth auth;
     private ProgressBar progressBar;
 
