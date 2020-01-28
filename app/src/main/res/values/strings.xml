@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AttendanceManagment</string>
+    <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
+    <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="phone">Phone</string>
+    <string name="hint_email">Hint</string>
+    <string name="hint_password">Hint</string>
+    <string name="action_sign_in_short">Register</string>
+
+</resources>
