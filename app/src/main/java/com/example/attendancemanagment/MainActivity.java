@@ -1,4 +1,5 @@
 package com.example.attendancemanagment;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +19,23 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.zxing.WriterException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -100,9 +114,15 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("Scan Result")
                     .setMessage(result.getContents())
-                    .setPositiveButton("Copy",new DialogInterface.OnClickListener(){
+                    .setPositiveButton("Next",new DialogInterface.OnClickListener(){
 
                         public void onClick(DialogInterface dialog,int which){
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("Class","A");
+                            user.put("Id", result.getContents());
+
+                            db.collection("Attendance").document("Class").collection("B").document(result.getContents()).set(user);
 
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

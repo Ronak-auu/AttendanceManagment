@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
+        auth = FirebaseAuth.getInstance();
 
 
 
@@ -60,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                auth = FirebaseAuth.getInstance();
 
 
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -81,6 +81,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
         });
+
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if(currentUser!=null){
+            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+        }
+
     }
 
 
