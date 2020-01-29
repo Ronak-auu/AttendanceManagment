@@ -38,31 +38,20 @@ public class LoginActivity extends AppCompatActivity {
         Info = (TextView)findViewById(R.id.tvInfo);
         Login = (Button)findViewById(R.id.btnLogin);
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-
-
-
-
-
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
-
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(getApplicationContext(), "Enter the password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 auth = FirebaseAuth.getInstance();
-
-
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
