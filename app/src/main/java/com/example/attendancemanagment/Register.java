@@ -5,98 +5,99 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
-    private EditText inputEmail,inputPassword;
+    private EditText etName,etRollno,etClass,etEmail,etId,edContact,etDob;
     private Button register;
-    private FirebaseAuth auth;
-
-
+    private FirebaseAuth firebaseAuth;
+    FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        auth = FirebaseAuth.getInstance();
+        etName = (EditText) findViewById(R.id.etName);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etRollno = (EditText) findViewById(R.id.etRollno);
+        etClass = (EditText) findViewById(R.id.etClass);
+        etId = (EditText) findViewById(R.id.etId);
+        edContact = (EditText) findViewById(R.id.edContact);
+        etDob = (EditText) findViewById(R.id.etDob);
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-
-        register = (Button) findViewById(R.id.register);
-
+        register = (Button) findViewById(R.id.Register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                final String email = inputEmail.getText().toString().trim();
-                final String password = inputPassword.getText().toString().trim();
-
-
-                if(TextUtils.isEmpty(email)){
-                    Toast.makeText(getApplicationContext(),"Enter email address!!",Toast.LENGTH_SHORT).show();
-                }
-
-                if(TextUtils.isEmpty(password)){
-                    Toast.makeText(getApplicationContext(),"Password is empty!!",Toast.LENGTH_SHORT).show();
-                }
-
-                if(TextUtils.isEmpty(email)){
-                    Toast.makeText(getApplicationContext(),"Username is empty!!",Toast.LENGTH_SHORT).show();
-                }
-
-
-
-                if(password.length()<6){
-                    Toast.makeText(getApplicationContext(),"Password is short",Toast.LENGTH_SHORT).show();
-                }
-
-
-
-
-                auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Toast.makeText(Register.this,"createuseremailcomplete"+task.isSuccessful(),Toast.LENGTH_SHORT).show();
-
-                        if(!task.isSuccessful()){
-
-                            Toast.makeText(Register.this,"AuthFailed"+task.getException(),Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                if(validate()){
+                    String Id = etId.getText().toString();
+                    Map<String, Object> user = new HashMap<>();
+                    //user.put("Id",etId.getText().toString());
+                    user.put("Name",etName.getText().toString());
+                    user.put("Dob",etDob.getText().toString());
+                    user.put("Class",etClass.getText().toString());
+                    user.put("RollNo",etRollno.getText().toString());
+                    user.put("Email",etEmail.getText().toString());
+                    //Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
+                    firebaseAuth = FirebaseAuth.getInstance();
+                    db = FirebaseFirestore.getInstance();
+                    db.collection("Institute").document("DDU").collection("Student").document(Id).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(Register.this, MainActivity.class));
                         }
-
-                        else{
-                            FirebaseUser currentperson = FirebaseAuth.getInstance().getCurrentUser();
-
-                            DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Teachers").child(currentperson.getUid());
-
-
-
-                            ref.child("Email").setValue(email);
-
-                            ref.child("Password").setValue(password);
-
-                            startActivity(new Intent(Register.this,LoginActivity.class));
-
-
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Register.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
+                            Log.d("Eror", e.getMessage());
                         }
-                    }
-                });
-
+                    });
+                }
             }
-
         });
-
+    }
+    private boolean validate(){
+        boolean result = false;
+        String Id = etId.getText().toString();
+        String Name = etName.getText().toString();
+        String Dob = etDob.getText().toString();
+        String Class = etClass.getText().toString();
+        String RollNo = etRollno.getText().toString();
+        String Email = etEmail.getText().toString();
+        //Toast.makeText(this,"User added",Toast.LENGTH_LONG).show();
+        if(Id.isEmpty())
+            Toast.makeText(this,"Please Enter a Id",Toast.LENGTH_LONG);
+        else if(Name.isEmpty())
+            Toast.makeText(this,"Please Enter a Name",Toast.LENGTH_LONG);
+        else if (Dob.isEmpty())
+            Toast.makeText(this,"Please Enter a Dob",Toast.LENGTH_LONG);
+        else if (Class.isEmpty())
+            Toast.makeText(this,"Please Enter a Class",Toast.LENGTH_LONG);
+        else if (RollNo.isEmpty())
+            Toast.makeText(this,"Please Enter a RollNo",Toast.LENGTH_LONG);
+        else if (Email.isEmpty())
+            Toast.makeText(this,"Please Enter a Email",Toast.LENGTH_LONG);
+        else{
+            Toast.makeText(this,"User",Toast.LENGTH_LONG).show();
+            result = true;
+        }
+        return result;
     }
 }
