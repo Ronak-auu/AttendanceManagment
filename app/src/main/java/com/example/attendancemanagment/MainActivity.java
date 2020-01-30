@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                             user.put("Class","A");
                             user.put("Id", result.getContents());
 
-                            db.collection("Attendance").document("Class").collection("B").document(result.getContents()).set(user);
+                            db.collection("Institute").document("DDU").collection("Attendance").document("21-01-2020").collection("B").document(result.getContents()).set(user);
 
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
