@@ -51,8 +51,6 @@ public class Register extends AppCompatActivity {
             public void onClick(View view) {
                 if(validate()){
                     String Id = etId.getText().toString();
-
-                    //Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
                     firebaseAuth = FirebaseAuth.getInstance();
                     db = FirebaseFirestore.getInstance();
                     DocumentReference dr = db.collection("Institute").document("DDU").collection("Student").document(Id);
