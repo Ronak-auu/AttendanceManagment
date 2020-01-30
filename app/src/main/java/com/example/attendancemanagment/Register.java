@@ -86,23 +86,6 @@ public class Register extends AppCompatActivity {
                             }
                         }
                     });
-                    /*if(db.collection("Institute").document("DDU").collection("Student").limitToLast(1).equals()){
-                        Toast.makeText(Register.this, "User already exist", Toast.LENGTH_LONG).show();
-                    }else {
-                        db.collection("Institute").document("DDU").collection("Student").document(Id).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(Register.this, MainActivity.class));
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(Register.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
-                                Log.d("Eror", e.getMessage());
-                            }
-                        });
-                    }*/
                 }
             }
         });
