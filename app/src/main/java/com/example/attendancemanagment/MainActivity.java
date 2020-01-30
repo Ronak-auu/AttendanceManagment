@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
@@ -43,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
     String inputvalue;
     EditText edttxt;
     ImageView qrimg;
-    Button start,scan;
+    Button start,scan,logout;
     Bitmap bitmap;
     QRGEncoder qrgEncoder;
-
+    SharedPreferences sharedpreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         edttxt=(EditText)findViewById(R.id.edittext);
         start=(Button)findViewById(R.id.createbtn);
         scan=(Button)findViewById(R.id.scanbtn);
+        logout=(Button)findViewById(R.id.logout);
         start.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 inputvalue = edttxt.getText().toString().trim();
@@ -97,9 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 intentIntegrator.setBeepEnabled(true);
                 intentIntegrator.setBarcodeImageEnabled(true);
                 intentIntegrator.initiateScan();
-
-
-
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.clear();
+                editor.commit();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
     }
