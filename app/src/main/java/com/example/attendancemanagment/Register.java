@@ -11,12 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,29 +51,60 @@ public class Register extends AppCompatActivity {
             public void onClick(View view) {
                 if(validate()){
                     String Id = etId.getText().toString();
-                    Map<String, Object> user = new HashMap<>();
-                    //user.put("Id",etId.getText().toString());
-                    user.put("Name",etName.getText().toString());
-                    user.put("Dob",etDob.getText().toString());
-                    user.put("Class",etClass.getText().toString());
-                    user.put("RollNo",etRollno.getText().toString());
-                    user.put("Email",etEmail.getText().toString());
+
                     //Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
                     firebaseAuth = FirebaseAuth.getInstance();
                     db = FirebaseFirestore.getInstance();
-                    db.collection("Institute").document("DDU").collection("Student").document(Id).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    DocumentReference dr = db.collection("Institute").document("DDU").collection("Student").document(Id);
+                    dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(Register.this, MainActivity.class));
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(Register.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                            Log.d("Eror", e.getMessage());
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Toast.makeText(Register.this, "User already exist", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Map<String, Object> user = new HashMap<>();
+                                    //user.put("Id",etId.getText().toString());
+                                    user.put("Name",etName.getText().toString());
+                                    user.put("Dob",etDob.getText().toString());
+                                    user.put("Class",etClass.getText().toString());
+                                    user.put("RollNo",etRollno.getText().toString());
+                                    user.put("Email",etEmail.getText().toString());
+                                    db.collection("Institute").document("DDU").collection("Student").document(etId.getText().toString()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
+                                            startActivity(new Intent(Register.this, MainActivity.class));
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(Register.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                            Log.d("Eror", e.getMessage());
+                                        }
+                                    });
+                                }
+                            }
                         }
                     });
+                    /*if(db.collection("Institute").document("DDU").collection("Student").limitToLast(1).equals()){
+                        Toast.makeText(Register.this, "User already exist", Toast.LENGTH_LONG).show();
+                    }else {
+                        db.collection("Institute").document("DDU").collection("Student").document(Id).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(Register.this, MainActivity.class));
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Register.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                Log.d("Eror", e.getMessage());
+                            }
+                        });
+                    }*/
                 }
             }
         });
@@ -95,7 +131,7 @@ public class Register extends AppCompatActivity {
         else if (Email.isEmpty())
             Toast.makeText(this,"Please Enter a Email",Toast.LENGTH_LONG);
         else{
-            Toast.makeText(this,"User",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"User",Toast.LENGTH_LONG).show();
             result = true;
         }
         return result;
