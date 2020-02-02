@@ -63,11 +63,12 @@ public class Register extends AppCompatActivity {
                                     Toast.makeText(Register.this, "User already exist", Toast.LENGTH_LONG).show();
                                 } else {
                                     Map<String, Object> user = new HashMap<>();
-                                    //user.put("Id",etId.getText().toString());
+                                    user.put("Id",etId.getText().toString());
                                     user.put("Name",etName.getText().toString());
                                     user.put("Dob",etDob.getText().toString());
                                     user.put("Class",etClass.getText().toString());
                                     user.put("RollNo",etRollno.getText().toString());
+                                    user.put("ContactNo",edContact.getText().toString());
                                     user.put("Email",etEmail.getText().toString());
                                     db.collection("Institute").document("DDU").collection("Student").document(etId.getText().toString()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -95,6 +96,7 @@ public class Register extends AppCompatActivity {
         String Id = etId.getText().toString();
         String Name = etName.getText().toString();
         String Dob = etDob.getText().toString();
+        String Contact = edContact.getText().toString();
         String Class = etClass.getText().toString();
         String RollNo = etRollno.getText().toString();
         String Email = etEmail.getText().toString();
@@ -111,6 +113,8 @@ public class Register extends AppCompatActivity {
             Toast.makeText(this,"Please Enter a RollNo",Toast.LENGTH_LONG);
         else if (Email.isEmpty())
             Toast.makeText(this,"Please Enter a Email",Toast.LENGTH_LONG);
+        else if (Contact.isEmpty())
+            Toast.makeText(this,"Please Enter a Contact No.",Toast.LENGTH_LONG);
         else{
             //Toast.makeText(this,"User",Toast.LENGTH_LONG).show();
             result = true;

@@ -54,6 +54,14 @@ public class LoginActivity extends AppCompatActivity {
         Info = (TextView)findViewById(R.id.tvInfo);
         Login = (Button)findViewById(R.id.btnLogin);
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        Info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,Register.class));
+            }
+        });
+
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

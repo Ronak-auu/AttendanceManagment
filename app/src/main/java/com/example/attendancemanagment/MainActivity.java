@@ -1,8 +1,12 @@
 package com.example.attendancemanagment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,10 +16,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.icu.text.DateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +42,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,20 +55,78 @@ public class MainActivity extends AppCompatActivity {
     String inputvalue;
     EditText edttxt;
     ImageView qrimg;
-    Button start,scan,logout;
+    Button start,scan;
     Bitmap bitmap;
     QRGEncoder qrgEncoder;
+    Toolbar toolbar;
     SharedPreferences sharedpreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.shitstuff);
+
+        toolbar = findViewById(R.id.toolbar);;
+        setSupportActionBar(toolbar);
+
+        View headerView = mNavigationView.getHeaderView(0);
+
+
+        Menu mn = mNavigationView.getMenu();
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                mDrawerLayout.closeDrawers();
+
+                if (menuItem.getItemId() == R.id.nav_item_managestudent) {
+                    startActivity(new Intent(MainActivity.this, Register.class));
+                    return true;
+                }
+
+
+                if (menuItem.getItemId() == R.id.nav_item_attendance) {
+                    startActivity(new Intent(MainActivity.this, ManageAttendance.class));
+                    return true;
+                }
+
+                if (menuItem.getItemId() == R.id.nav_item_editstudent) {
+                    startActivity(new Intent(MainActivity.this, EditStudent.class));
+                    return true;
+                }
+
+                if (menuItem.getItemId() == R.id.nav_item_logout) {
+                    sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.clear();
+                    editor.commit();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,toolbar,  R.string.app_name,
+                R.string.app_name);
+
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mDrawerToggle.syncState();
+
 
         qrimg=(ImageView)findViewById(R.id.qrcode);
         edttxt=(EditText)findViewById(R.id.edittext);
         start=(Button)findViewById(R.id.createbtn);
         scan=(Button)findViewById(R.id.scanbtn);
-        logout=(Button)findViewById(R.id.logout);
         start.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 inputvalue = edttxt.getText().toString().trim();
@@ -102,23 +170,21 @@ public class MainActivity extends AppCompatActivity {
                 intentIntegrator.initiateScan();
             }
         });
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.clear();
-                editor.commit();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
-        });
+
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(result!=null && result.getContents()!=null)
         {
+            Date d = new Date();
+            final String date = DateFormat.getDateInstance().format(d);
+
+            String id = result.getContents();
+            final char c = id.charAt(2);
+
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("Scan Result")
                     .setMessage(result.getContents())
@@ -127,10 +193,10 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog,int which){
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             Map<String, Object> user = new HashMap<>();
-                            user.put("Class","A");
+                            user.put("Class","B");
                             user.put("Id", result.getContents());
 
-                            db.collection("Institute").document("DDU").collection("Attendance").document("21-01-2020").collection("B").document(result.getContents()).set(user);
+                            db.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(date)).collection(String.valueOf(c)).document(result.getContents()).set(user);
 
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
