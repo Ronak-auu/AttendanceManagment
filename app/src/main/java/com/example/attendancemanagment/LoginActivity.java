@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 //Toast.makeText(LoginActivity.this, "User already exist", Toast.LENGTH_LONG).show();
-                                if(document.get("dob").equals(Password)){
+                                if(document.get("Dob").equals(Password)){
                                     sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     editor.putString("Id",Id);
