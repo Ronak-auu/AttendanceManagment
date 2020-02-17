@@ -63,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         NavigationView mNavigationView = (NavigationView) findViewById(R.id.shitstuff);
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         View headerView = mNavigationView.getHeaderView(0);
-
 
         Menu mn = mNavigationView.getMenu();
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -89,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, Register.class));
                     return true;
                 }
-
 
                 if (menuItem.getItemId() == R.id.nav_item_attendance) {
                     startActivity(new Intent(MainActivity.this, ManageAttendance.class));
@@ -111,17 +107,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return false;
             }
-
         });
 
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,toolbar,  R.string.app_name,
                 R.string.app_name);
 
-
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mDrawerToggle.syncState();
-
 
         qrimg=(ImageView)findViewById(R.id.qrcode);
         edttxt=(EditText)findViewById(R.id.edittext);
