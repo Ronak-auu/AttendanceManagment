@@ -1,28 +1,20 @@
 package com.example.attendancemanagment;
 
 import android.app.ProgressDialog;
-        import android.content.Context;
-        import android.os.AsyncTask;
-        import android.widget.Toast;
-        import java.util.Properties;
-        import javax.mail.Message;
-        import javax.mail.MessagingException;
-        import javax.mail.PasswordAuthentication;
-        import javax.mail.Session;
-        import javax.mail.Transport;
-        import javax.mail.internet.InternetAddress;
-        import javax.mail.internet.MimeMessage;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.widget.Toast;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class Sendmail extends AsyncTask<Void,Void,Void>  {
 
-    //Add those line in dependencies
-    //implementation files('libs/activation.jar')
-    //implementation files('libs/additionnal.jar')
-    //implementation files('libs/mail.jar')
-
-    //Need INTERNET permission
-
-    //Variables
     private Context mContext;
     private Session mSession;
 
