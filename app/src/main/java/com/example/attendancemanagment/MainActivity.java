@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     QRGEncoder qrgEncoder;
     Toolbar toolbar;
     SharedPreferences sharedpreferences;
+    private  long backPressedTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -164,6 +166,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (backPressedTime+2000 > System.currentTimeMillis()){
+            finishAffinity();
+            System.exit(0);
+        }
+        else
+            Toast.makeText(getBaseContext(),"Press back again to Exit",Toast.LENGTH_SHORT).show();
+        backPressedTime = System.currentTimeMillis();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
