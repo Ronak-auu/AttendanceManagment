@@ -117,7 +117,7 @@ public class EditStudent extends AppCompatActivity {
                                 user.put("Class",etClass.getText().toString());
                                 user.put("RollNo",etRollno.getText().toString());
                                 user.put("Email",etEmail.getText().toString());
-                                user.put("Contact",edContact.getText().toString());
+                                user.put("ContactNo",edContact.getText().toString());
 
                             db.collection("Institute").document("DDU").collection("Student").document(etId.getText().toString()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
