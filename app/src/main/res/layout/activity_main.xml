@@ -5,23 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-
-
-
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-
         android:layout_weight="12"
         tools:openDrawer="start">
-
-
         <include layout="@layout/app_bar_main">
         </include>
-
         <com.google.android.material.navigation.NavigationView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,13 +25,5 @@
             app:menu="@menu/menu"
 
             />
-
-
-
-
-
-
     </androidx.drawerlayout.widget.DrawerLayout>
-
-
 </RelativeLayout>

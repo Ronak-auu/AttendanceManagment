@@ -84,11 +84,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                //Toast.makeText(LoginActivity.this, "User already exist", Toast.LENGTH_LONG).show();
                                 if(document.get("Dob").equals(Password)){
                                     sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                                    editor.putString("Id",Id);
+                                    editor.putString("Id","Faculty");
                                     editor.commit();
                                     Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -96,8 +95,32 @@ public class LoginActivity extends AppCompatActivity {
                                 else{
                                     Toast.makeText(LoginActivity.this, "Password is Wrong", Toast.LENGTH_LONG).show();
                                 }
-                            } else {
-                                Toast.makeText(LoginActivity.this, "User Not Found", Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                DocumentReference dr = db.collection("Institute").document("DDU").collection("Student").document(Id);
+                                dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                if(document.get("Dob").equals(Password)){
+                                                    sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                    editor.putString("Id","Student");
+                                                    editor.commit();
+                                                    Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_LONG).show();
+                                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                }
+                                                else{
+                                                    Toast.makeText(LoginActivity.this, "Password is Wrong", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                            else
+                                                Toast.makeText(LoginActivity.this, "User Not Found", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
                             }
                         }
                     }
@@ -117,8 +140,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });*/
             }
-
-
         });
     }
 }

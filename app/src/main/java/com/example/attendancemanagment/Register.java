@@ -76,6 +76,7 @@ public class Register extends AppCompatActivity {
                                         public void onSuccess(Void aVoid) {
                                             Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(Register.this, MainActivity.class));
+                                            SendMail();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -91,6 +92,13 @@ public class Register extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void SendMail(){
+        String mail = etEmail.getText().toString();
+        String subject = "Attendance Management";
+        String message = "This Mail from Attendance Managment\nYour Account is Added\nYour Id : "+etId.getText().toString()+"\nYour Password : "+etDob.getText().toString();
+        Sendmail sm = new Sendmail(this,mail,subject,message);
+        sm.execute();
     }
     private boolean validate(){
         boolean result = false;

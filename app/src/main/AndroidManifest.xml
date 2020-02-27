@@ -4,6 +4,7 @@
     package="com.example.attendancemanagment">
 
     <uses-feature android:name="com.android.hardware.Camera.focus" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -13,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ManageAttendance"></activity>
-        <activity android:name=".Attendance" />
         <activity android:name=".EditStudent" />
         <activity android:name=".Register" />
         <activity android:name=".LoginActivity">
