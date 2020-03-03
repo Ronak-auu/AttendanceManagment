@@ -89,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
+                if (menuItem.getItemId() == R.id.nav_item_record) {
+                    startActivity(new Intent(MainActivity.this, RecordActivity.class));
+                    return true;
+                }
+
                 if (menuItem.getItemId() == R.id.nav_item_attendance) {
                     startActivity(new Intent(MainActivity.this, ManageAttendance.class));
                     return true;
