@@ -69,7 +69,7 @@ public class ManageAttendance extends AppCompatActivity {
                             Map<String, Object> user = new HashMap<>();
                             user.put("Class",classs.getText().toString().trim());
                             user.put("Id", result.getContents());
-
+                            user.put("attendance","p");
                             db.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(date)).collection(classs.getText().toString().trim()).document(result.getContents()).set(user);
 
                         }
