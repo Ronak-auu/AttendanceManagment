@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -55,12 +57,13 @@ public class RecordActivity extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        Date d = new Date();
-        final String date = DateFormat.getDateInstance().format(d);
+        final Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        final String today = formatter.format(date);
 
-        String classs = "d";
-        //classs = editText.getText().toString().trim();
-        Query query = firebaseFirestore.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(date)).collection(String.valueOf(classs));
+        String classs ="x" ;
+
+        Query query = firebaseFirestore.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(today)).collection(String.valueOf(classs));
 
         FirestoreRecyclerOptions<Attendance> options = new FirestoreRecyclerOptions.Builder<Attendance>()
                 .setQuery(query,Attendance.class)
@@ -84,6 +87,44 @@ public class RecordActivity extends AppCompatActivity {
         mlist.setHasFixedSize(true);
         mlist.setLayoutManager(new LinearLayoutManager(this));
         mlist.setAdapter(adapter);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                String clas  ;
+                clas = editText.getText().toString().trim();
+                Query query = firebaseFirestore.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(today)).collection(String.valueOf(clas));
+
+                FirestoreRecyclerOptions<Attendance> options = new FirestoreRecyclerOptions.Builder<Attendance>()
+                        .setQuery(query,Attendance.class)
+                        .build();
+
+                adapter = new FirestoreRecyclerAdapter<Attendance, AttendanceViewHolder>(options) {
+                    @NonNull
+                    @Override
+                    public AttendanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_single,parent,false);
+                        return new AttendanceViewHolder(view);
+                    }
+
+                    @Override
+                    protected void onBindViewHolder(@NonNull AttendanceViewHolder holder, int position, @NonNull Attendance model) {
+                        holder.list_id.setText(model.getId());
+                        holder.list_attendance.setText(model.getAttendance());
+                    }
+                };
+
+                mlist.setHasFixedSize(true);
+                mlist.setLayoutManager(new LinearLayoutManager(RecordActivity.this));
+                mlist.setAdapter(adapter);
+
+                adapter.startListening();
+            }
+
+        });
+
     }
 
     private class AttendanceViewHolder extends RecyclerView.ViewHolder {
