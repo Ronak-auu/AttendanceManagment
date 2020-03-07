@@ -19,6 +19,11 @@
 
         android:id="@+id/nav_item_editstudent"
         />
+    <item android:title="ViewRecord"
+
+
+        android:id="@+id/nav_item_record"
+        />
     <item android:title="Logout"
 
 

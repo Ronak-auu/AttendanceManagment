@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +57,9 @@ public class ManageAttendance extends AppCompatActivity {
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(result!=null && result.getContents()!=null)
         {
-            Date d = new Date();
-            final String date = DateFormat.getDateInstance().format(d);
+            final Date date = Calendar.getInstance().getTime();
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            final String today = formatter.format(date);
 
 
             new AlertDialog.Builder(ManageAttendance.this)
@@ -69,8 +72,8 @@ public class ManageAttendance extends AppCompatActivity {
                             Map<String, Object> user = new HashMap<>();
                             user.put("Class",classs.getText().toString().trim());
                             user.put("Id", result.getContents());
-
-                            db.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(date)).collection(classs.getText().toString().trim()).document(result.getContents()).set(user);
+                            user.put("attendance","p");
+                            db.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(today)).collection(classs.getText().toString().trim()).document(result.getContents()).set(user);
 
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
