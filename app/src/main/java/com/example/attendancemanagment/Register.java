@@ -63,6 +63,8 @@ public class Register extends AppCompatActivity {
                                     Toast.makeText(Register.this, "User already exist", Toast.LENGTH_LONG).show();
                                 } else {
                                     Map<String, Object> user = new HashMap<>();
+                                    Map<String, Object> usere = new HashMap<>();
+                                    usere.put("Id",etId.getText().toString());
                                     user.put("Id",etId.getText().toString());
                                     user.put("Name",etName.getText().toString());
                                     user.put("Dob",etDob.getText().toString());
@@ -70,7 +72,17 @@ public class Register extends AppCompatActivity {
                                     user.put("RollNo",etRollno.getText().toString());
                                     user.put("ContactNo",edContact.getText().toString());
                                     user.put("Email",etEmail.getText().toString());
-                                    user.put("ContactNo",edContact.getText().toString());
+
+                                    db.collection("Institute").document("DDU")
+                                            .collection("Class").document(etClass.getText().toString())
+                                            .collection("Students").document(etId.getText().toString())
+                                            .set(usere).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+
+
                                     db.collection("Institute").document("DDU").collection("Student").document(etId.getText().toString()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -82,7 +94,7 @@ public class Register extends AppCompatActivity {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             Toast.makeText(Register.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
-                                            Log.d("Eror", e.getMessage());
+                                            Log.d("Error", e.getMessage());
                                         }
                                     });
                                 }
