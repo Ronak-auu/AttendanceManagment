@@ -15,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -38,12 +40,13 @@ public class RecordActivity extends AppCompatActivity {
 
     private EditText editText;
     private Button button;
-
+    private CalendarView calendarView;
     private RecyclerView mlist;
     private FirebaseFirestore firebaseFirestore;
 
     private FirestoreRecyclerAdapter adapter;
 
+    String today;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -54,14 +57,33 @@ public class RecordActivity extends AppCompatActivity {
         editText = (EditText)findViewById(R.id.editTextclass);
         button = (Button)findViewById(R.id.buttonrecord);
         mlist =findViewById(R.id.recyclerView);
+        calendarView=findViewById(R.id.calendarView2);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        final Date date = Calendar.getInstance().getTime();
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        final String today = formatter.format(date);
+        final Date date=Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        today = dateFormat.format(date);
+       // Toast.makeText(RecordActivity.this,today, Toast.LENGTH_LONG).show();
 
         String classs ="x" ;
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month,
+                                            int dayOfMonth) {
+
+                if(month/10 == 0 && dayOfMonth/10 == 0)
+                    today ="0"+dayOfMonth+"-"+"0"+(month+1)+"-"+year;
+                else if(dayOfMonth/10 == 0 )
+                    today ="0"+dayOfMonth+"-"+(month+1)+"-"+year;
+                else if(month/10 == 0)
+                    today =dayOfMonth+"-"+"0"+(month+1)+"-"+year;
+                else
+                    today =dayOfMonth+"-"+(month+1)+"-"+year;
+               // Toast.makeText(RecordActivity.this,today, Toast.LENGTH_LONG).show();
+            }
+        });
 
         Query query = firebaseFirestore.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(today)).collection(String.valueOf(classs));
 
@@ -91,6 +113,7 @@ public class RecordActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
 
                 String clas  ;
