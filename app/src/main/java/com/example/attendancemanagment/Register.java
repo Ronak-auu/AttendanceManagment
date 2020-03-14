@@ -72,6 +72,7 @@ public class Register extends AppCompatActivity {
                                     user.put("RollNo",etRollno.getText().toString());
                                     user.put("ContactNo",edContact.getText().toString());
                                     user.put("Email",etEmail.getText().toString());
+                                    user.put("Icard","No");
 
                                     db.collection("Institute").document("DDU")
                                             .collection("Class").document(etClass.getText().toString())
