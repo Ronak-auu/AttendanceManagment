@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,23 +38,24 @@ public class ManageAttendance extends AppCompatActivity {
     private LayoutInflater inflater;
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog dialog;
-    Button scan,abs;
+    Button scan, abs, notify;
     EditText classs;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_attendance);
 
-        scan=(Button)findViewById(R.id.scanbtn);
-        classs=(EditText)findViewById(R.id.etclasss);
-        abs=(Button)findViewById(R.id.abs);
-
+        scan = (Button) findViewById(R.id.scanbtn);
+        classs = (EditText) findViewById(R.id.etclasss);
+        abs = (Button) findViewById(R.id.abs);
+        notify = (Button) findViewById(R.id.notify);
         final Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         final String today = formatter.format(date);
 
-        abs.setOnClickListener(new View.OnClickListener(){
+        abs.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 alertDialogBuilder = new AlertDialog.Builder(ManageAttendance.this);
@@ -84,15 +86,14 @@ public class ManageAttendance extends AppCompatActivity {
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful())
-                                        {
+                                        if (task.isSuccessful()) {
                                             // QueryDocumentSnapshot documents = (QueryDocumentSnapshot) task.getResult().getDocuments();
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                                 Map<String, Object> user = new HashMap<>();
-                                                user.put("Class",classs.getText().toString());
+                                                user.put("Class", classs.getText().toString());
                                                 user.put("Id", document.getId());
-                                                user.put("attendance","a");
+                                                user.put("attendance", "a");
                                                 db.collection("Institute").document("DDU")
                                                         .collection("Attendance").document(String.valueOf(today))
                                                         .collection(classs.getText().toString()).document(document.getId()).set(user);
@@ -111,6 +112,56 @@ public class ManageAttendance extends AppCompatActivity {
             }
         });
 
+        notify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(today))
+                        .collection(classs.getText().toString())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (final QueryDocumentSnapshot document : task.getResult()) {
+
+                                        if (document.get("attendance").equals("a")) {
+                                            Log.v("Tag", "Id "+document.getId(), task.getException());
+
+                                            //String id = document.get("attendance").toString();
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            db.collection("Institute").document("DDU").collection("Student")
+                                            .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                                                    String id1 = (String) document1.get("Id");
+                                                                    String id2 = document.getId();
+                                                                    Log.v("Tag", "Id1 "+id1, task.getException());
+                                                                    Log.v("Tag", "Id "+id2, task.getException());
+
+                                                                    if(id1.equals(id2)){
+                                                                        String mail = document1.get("Email").toString();
+                                                                        Log.v("Tag", mail, task.getException());
+                                                                        SendMail(mail);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+
+
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        });
+            }
+        });
 
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,12 +178,19 @@ public class ManageAttendance extends AppCompatActivity {
         });
     }
 
+    private void SendMail(String mail) {
+
+        String subject = "Attendance Management";
+        String message = "You were Absent today";
+        Sendmail sm = new Sendmail(ManageAttendance.this,mail,subject,message);
+        sm.execute();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(result!=null && result.getContents()!=null)
-        {
+        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null && result.getContents() != null) {
             final Date date = Calendar.getInstance().getTime();
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             final String today = formatter.format(date);
@@ -141,14 +199,14 @@ public class ManageAttendance extends AppCompatActivity {
             new AlertDialog.Builder(ManageAttendance.this)
                     .setTitle("Scan Result")
                     .setMessage(result.getContents())
-                    .setPositiveButton("Next",new DialogInterface.OnClickListener(){
+                    .setPositiveButton("Next", new DialogInterface.OnClickListener() {
 
-                        public void onClick(DialogInterface dialog,int which){
+                        public void onClick(DialogInterface dialog, int which) {
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             Map<String, Object> user = new HashMap<>();
-                            user.put("Class",classs.getText().toString().trim());
+                            user.put("Class", classs.getText().toString().trim());
                             user.put("Id", result.getContents());
-                            user.put("attendance","p");
+                            user.put("attendance", "p");
                             db.collection("Institute").document("DDU").collection("Attendance").document(String.valueOf(today)).collection(classs.getText().toString().trim()).document(result.getContents()).set(user);
 
                         }
