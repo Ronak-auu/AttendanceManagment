@@ -87,7 +87,8 @@ public class LoginActivity extends AppCompatActivity {
                                 if(document.get("Dob").equals(Password)){
                                     sharedpreferences = getSharedPreferences("Am", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                                    editor.putString("Id","Faculty");
+                                    editor.putString("type","Faculty");
+                                    editor.putString("Id",Id);
                                     editor.commit();
                                     Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));

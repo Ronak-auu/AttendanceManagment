@@ -81,7 +81,7 @@ public class RecordActivity extends AppCompatActivity {
                     today =dayOfMonth+"-"+"0"+(month+1)+"-"+year;
                 else
                     today =dayOfMonth+"-"+(month+1)+"-"+year;
-               // Toast.makeText(RecordActivity.this,today, Toast.LENGTH_LONG).show();
+               //    Toast.makeText(RecordActivity.this,today, Toast.LENGTH_LONG).show();
             }
         });
 

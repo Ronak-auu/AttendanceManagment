@@ -94,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
+                if (menuItem.getItemId() == R.id.nav_item_profile) {
+                    startActivity(new Intent(MainActivity.this, Profile.class));
+                    return true;
+                }
+
                 if (menuItem.getItemId() == R.id.nav_item_attendance) {
                     startActivity(new Intent(MainActivity.this, ManageAttendance.class));
                     return true;

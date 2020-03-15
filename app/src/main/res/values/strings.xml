@@ -9,4 +9,10 @@
     <string name="hint_password">Hint</string>
     <string name="action_sign_in_short">Register</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sure_text">Are You Sure ?</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+
 </resources>
