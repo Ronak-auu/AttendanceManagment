@@ -64,16 +64,14 @@ public class Register extends AppCompatActivity {
                                 } else {
                                     Map<String, Object> user = new HashMap<>();
                                     Map<String, Object> usere = new HashMap<>();
-                                    usere.put("Id",etId.getText().toString());
                                     user.put("Id",etId.getText().toString());
                                     user.put("Name",etName.getText().toString());
                                     user.put("Dob",etDob.getText().toString());
-                                    user.put("Class",etClass.getText().toString());
-                                    user.put("RollNo",etRollno.getText().toString());
+                                    user.put("Class",etClass.getText().toString().toUpperCase());
+                                    user.put("RollNo",etRollno.getText().toString().toUpperCase());
                                     user.put("ContactNo",edContact.getText().toString());
-                                    user.put("Email",etEmail.getText().toString());
+                                    user.put("Email",etEmail.getText().toString().toLowerCase());
                                     user.put("Icard","No");
-
                                     db.collection("Institute").document("DDU")
                                             .collection("Class").document(etClass.getText().toString())
                                             .collection("Students").document(etId.getText().toString())
@@ -82,8 +80,6 @@ public class Register extends AppCompatActivity {
                                             Toast.makeText(Register.this, "User added", Toast.LENGTH_LONG).show();
                                         }
                                     });
-
-
                                     db.collection("Institute").document("DDU").collection("Student").document(etId.getText().toString()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

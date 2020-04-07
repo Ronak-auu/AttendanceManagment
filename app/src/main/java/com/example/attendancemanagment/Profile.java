@@ -111,6 +111,7 @@ public class Profile extends AppCompatActivity {
                             user.put("Dob",dob.getText().toString());
                             user.put("Email",email.getText().toString());
                             user.put("ContactNumber",contact.getText().toString());
+                            user.put("Icard","No");
 
                             db.collection("Institute").document("DDU").collection("Faculty").document(etId.toString()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
