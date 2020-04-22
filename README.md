@@ -1,6 +1,7 @@
 # AttendanceManagment
 
 Admin folder contain code of admin-side which is in mvc asp.net
+---------------------------------------------------------------
                                                  
 
 Teacher(User) will interact with android app
@@ -11,5 +12,5 @@ AttendanceManagment/app/src/main/java/com/example/attendancemanagment/
 Here you can see layout of all pages
 AttendanceManagment/app/src/main/res/layout/
 
-All other information given in RSepot.doc 
+All other information given in Repot.doc 
 ----------------------------------------
