@@ -1,8 +1,5 @@
 # AttendanceManagment
 
-Admin folder contain code of admin-side which is in mvc asp.net
----------------------------------------------------------------
-                                                 
 
 Teacher(User) will interact with android app
 --------------------------------------------
